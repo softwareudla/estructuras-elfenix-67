@@ -1,37 +1,51 @@
 #include <stdio.h>
 #include "funciones.h"
 
-int main (int argc, char *argv[]) {
+int main() {
+    struct Libro biblioteca[MAX_LIBROS];
+    int contador;
+    int opcion;
 
-    struct Libro libros[20];
-    int opc;
-    int i=0;
-    do{
-    opc = menu();
-    switch (opc)
-    {
-        case 1:
-            registrarLibros(libros, i);
-            break;
-        case 2:
-            mostrarLibros(libros);
-            break;
-        case 3:
-            int id;
-            printf("Ingrese el id del libro a buscar: ");
-            scanf("%d", &id);
-            buscarLibroId(libros, id);
-            i++;
-            break;
-        case 4:
-            char titulo[100];
-            printf("Ingrese el titulo del libro a buscar: ");
-            scanf("%s", titulo);
-            buscarLibroTitulo(libros, titulo);
-            break;
+    inicializarBiblioteca(biblioteca, &contador);
+
+    do {
+        printf("\n----- Menu Biblioteca -----\n");
+        printf("1. Agregar libro\n");
+        printf("2. Mostrar libros\n");
+        printf("3. Buscar libro\n");
+        printf("4. Actualizar estado de un libro\n");
+        printf("5. Eliminar libro\n");
+        printf("6. Salir\n");
+        printf("Seleccione una opcion: ");
         
+        if (scanf("%d", &opcion) != 1) { 
+            printf("\nError: debe ingresar un numero.\n");
+            while (getchar() != '\n'); 
+        }
 
-    }
+        if (opcion == 1) {
+            agregarLibro(biblioteca, &contador);
+        } else if (opcion == 2) {
+            mostrarLibros(biblioteca, contador);
+        } else if (opcion == 3) {
+            buscarLibro(biblioteca, contador);
+        } else if (opcion == 4) {
+            actualizarEstado(biblioteca, contador);
+        } else if (opcion == 5) {
+            eliminarLibro(biblioteca, &contador);
+        } else if (opcion == 6) {
+            printf("\nSaliendo del programa. Hasta luego!\n");
+        } else {
+            printf("\nOpcion invalida. Intente de nuevo.\n");
+        }
+
+        while (getchar() != '\n');
+
+    } while (opcion != 6);
+
+    return 0;
+}
+
     }while(opc != 7);
 
 
