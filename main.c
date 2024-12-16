@@ -19,35 +19,38 @@ int main() {
         printf("Seleccione una opcion: ");
         
         if (scanf("%d", &opcion) != 1) { 
-            printf("\nError: debe ingresar un numero.\n");
-            while (getchar() != '\n'); 
+            printf("\nError: Debe ingresar un numero.\n");
+            while (getchar() != '\n');
+            opcion = -1;  
+            continue;     
         }
+        while (getchar() != '\n'); 
 
-        if (opcion == 1) {
-            agregarLibro(biblioteca, &contador);
-        } else if (opcion == 2) {
-            mostrarLibros(biblioteca, contador);
-        } else if (opcion == 3) {
-            buscarLibro(biblioteca, contador);
-        } else if (opcion == 4) {
-            actualizarEstado(biblioteca, contador);
-        } else if (opcion == 5) {
-            eliminarLibro(biblioteca, &contador);
-        } else if (opcion == 6) {
-            printf("\nSaliendo del programa. Hasta luego!\n");
-        } else {
-            printf("\nOpcion invalida. Intente de nuevo.\n");
+        switch (opcion) {
+            case 1:
+                agregarLibro(biblioteca, &contador);
+                break;
+            case 2:
+                mostrarLibros(biblioteca, contador);
+                break;
+            case 3:
+                buscarLibro(biblioteca, contador);
+                break;
+            case 4:
+                actualizarEstado(biblioteca, contador);
+                break;
+            case 5:
+                eliminarLibro(biblioteca, &contador);
+                break;
+            case 6:
+                printf("\nSaliendo del programa. Hasta luego!\n");
+                break;
+            default:
+                printf("\nOpcion invalida. Intente de nuevo.\n");
         }
-
-        while (getchar() != '\n');
 
     } while (opcion != 6);
 
     return 0;
 }
 
-    }while(opc != 7);
-
-
-    return 0;
-}
