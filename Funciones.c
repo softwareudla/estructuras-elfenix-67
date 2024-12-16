@@ -151,18 +151,20 @@ void eliminarLibro(struct Libro biblioteca[], int *contador) {
         printf("\nNo hay libros en la biblioteca.\n");
         return;
     }
-
     int id;
     printf("\nIngrese el ID del libro a eliminar: ");
-    scanf("%d");
-    getchar();
-
+    if (scanf("%d", &id) != 1) {
+        printf("\nError: Entrada invalida.\n");
+        while (getchar() != '\n');  
+        return;
+    }
+    getchar();  
     for (int i = 0; i < *contador; i++) {
         if (biblioteca[i].id == id) {
             for (int j = i; j < *contador - 1; j++) {
                 biblioteca[j] = biblioteca[j + 1];
             }
-            (*contador)--;
+            (*contador)--; 
             printf("\nLibro eliminado.\n");
             return;
         }
