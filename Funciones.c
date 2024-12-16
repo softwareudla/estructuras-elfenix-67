@@ -21,6 +21,38 @@ int validarEstado(char *estado) {
     return strcmp(estadoCpy, "disponible") == 0 || strcmp(estadoCpy, "prestado") == 0;
 }
 
+int esTextoValido(const char *cadena) {
+    for (int i = 0; cadena[i] != '\0'; i++) {
+        if (!isalpha(cadena[i]) && cadena[i] != ' ') {
+            return 0;  
+        }
+    }
+    return 1;  
+}
+
+void leerCadenaTexto(const char *mensaje, char *cadena, int tamano) {
+    do {
+        leerCadena(mensaje, cadena, tamano);
+        if (!esTextoValido(cadena)) {
+            printf("Error: Solo se permiten letras y espacios. Intente nuevamente.\n");
+        }
+    } while (!esTextoValido(cadena));
+}
+
+int leerNumero(const char *mensaje) {
+    int numero;
+    while (1) {
+        printf("%s", mensaje);
+        if (scanf("%d", &numero) == 1) {
+            while (getchar() != '\n');  
+            return numero;
+        } else {
+            printf("Entrada no válida. Intente nuevamente.\n");
+            while (getchar() != '\n');  
+        }
+    }
+}
+
 void leerCadena(const char *mensaje, char *cadena, int tamano) {
     printf("%s", mensaje);
     fgets(cadena, tamano, stdin);
@@ -29,15 +61,13 @@ void leerCadena(const char *mensaje, char *cadena, int tamano) {
 
 int agregarLibro(struct Libro biblioteca[], int *contador) {
     if (*contador >= MAX_LIBROS) {
-        printf("\nNo se pueden agregar mas libros. Biblioteca llena.\n");
+        printf("\nNo se pueden agregar más libros. Biblioteca llena.\n");
         return 0;
     }
 
     struct Libro nuevoLibro;
 
-    printf("\nIngrese el ID del libro: ");
-    scanf("%d", &nuevoLibro.id);
-    getchar();
+    nuevoLibro.id = leerNumero("\nIngrese el ID del libro: ");
 
     for (int i = 0; i < *contador; i++) {
         if (biblioteca[i].id == nuevoLibro.id) {
@@ -46,16 +76,16 @@ int agregarLibro(struct Libro biblioteca[], int *contador) {
         }
     }
 
-    leerCadena("Ingrese el titulo: ", nuevoLibro.titulo, 101);
-    leerCadena("Ingrese el autor: ", nuevoLibro.autor, 51);
-    printf("Ingrese el año: ");
-    scanf("%d", &nuevoLibro.anio);
-    getchar();
+    leerCadenaTexto("Ingrese el título: ", nuevoLibro.titulo, 101);
+
+    leerCadenaTexto("Ingrese el autor: ", nuevoLibro.autor, 51);
+
+    nuevoLibro.anio = leerNumero("Ingrese el año: ");
 
     do {
         leerCadena("Ingrese el estado (Disponible o Prestado): ", nuevoLibro.estado, 11);
         if (!validarEstado(nuevoLibro.estado))
-            printf("Estado invalido. Intente nuevamente.\n");
+            printf("Estado inválido. Intente nuevamente.\n");
     } while (!validarEstado(nuevoLibro.estado));
 
     biblioteca[(*contador)++] = nuevoLibro;
@@ -69,7 +99,7 @@ void mostrarLibros(struct Libro biblioteca[], int contador) {
         return;
     }
 
-    printf("\n%-10s %-30s %-20s %-10s %-15s\n", "ID", "Titulo", "Autor", "Año", "Estado");
+    printf("\n%-10s %-30s %-20s %-10s %-15s\n", "ID", "Título", "Autor", "Año", "Estado");
     printf("--------------------------------------------------------------------------------\n");
     for (int i = 0; i < contador; i++) {
         printf("%-10d %-30s %-20s %-10d %-15s\n",
@@ -84,36 +114,32 @@ void buscarLibro(struct Libro biblioteca[], int contador) {
     }
 
     int opcion;
-    printf("\nBuscar por: 1. ID 2. Titulo\nSeleccione una opcion: ");
-    scanf("%d", &opcion);
-    getchar();
+    printf("\nBuscar por: 1. ID 2. Título\nSeleccione una opción: ");
+    opcion = leerNumero("");
 
     if (opcion == 1) {
-        int id;
-        printf("\nIngrese el ID del libro: ");
-        scanf("%d", &id);
-
+        int id = leerNumero("\nIngrese el ID del libro: ");
         for (int i = 0; i < contador; i++) {
             if (biblioteca[i].id == id) {
-                printf("\nID: %d\nTitulo: %s\nAutor: %s\nAño: %d\nEstado: %s\n",
+                printf("\nID: %d\nTítulo: %s\nAutor: %s\nAño: %d\nEstado: %s\n",
                        biblioteca[i].id, biblioteca[i].titulo, biblioteca[i].autor, biblioteca[i].anio, biblioteca[i].estado);
                 return;
             }
         }
     } else if (opcion == 2) {
         char titulo[101];
-        leerCadena("\nIngrese el titulo del libro: ", titulo, 101);
+        leerCadenaTexto("\nIngrese el título del libro: ", titulo, 101);
         for (int i = 0; i < contador; i++) {
             if (strcmp(biblioteca[i].titulo, titulo) == 0) {
-                printf("\nID: %d\nTitulo: %s\nAutor: %s\nAño: %d\nEstado: %s\n",
+                printf("\nID: %d\nTítulo: %s\nAutor: %s\nAño: %d\nEstado: %s\n",
                        biblioteca[i].id, biblioteca[i].titulo, biblioteca[i].autor, biblioteca[i].anio, biblioteca[i].estado);
                 return;
             }
         }
     } else {
-        printf("\nOpcion invalida.\n");
+        printf("\nOpción inválida.\n");
     }
-    printf("\nNo se encontro el libro.\n");
+    printf("\nNo se encontró el libro.\n");
 }
 
 void actualizarEstado(struct Libro biblioteca[], int contador) {
@@ -122,11 +148,7 @@ void actualizarEstado(struct Libro biblioteca[], int contador) {
         return;
     }
 
-    int id;
-    printf("\nIngrese el ID del libro: ");
-    scanf("%d", &id);
-    getchar();
-
+    int id = leerNumero("\nIngrese el ID del libro: ");
     for (int i = 0; i < contador; i++) {
         if (biblioteca[i].id == id) {
             printf("\nEstado actual: %s\n", biblioteca[i].estado);
@@ -135,7 +157,7 @@ void actualizarEstado(struct Libro biblioteca[], int contador) {
             do {
                 leerCadena("Ingrese el nuevo estado: ", nuevoEstado, 11);
                 if (!validarEstado(nuevoEstado))
-                    printf("Estado invalido. Intente nuevamente.\n");
+                    printf("Estado inválido. Intente nuevamente.\n");
             } while (!validarEstado(nuevoEstado));
 
             strcpy(biblioteca[i].estado, nuevoEstado);
@@ -151,14 +173,8 @@ void eliminarLibro(struct Libro biblioteca[], int *contador) {
         printf("\nNo hay libros en la biblioteca.\n");
         return;
     }
-    int id;
-    printf("\nIngrese el ID del libro a eliminar: ");
-    if (scanf("%d", &id) != 1) {
-        printf("\nError: Entrada invalida.\n");
-        while (getchar() != '\n');  
-        return;
-    }
-    getchar();  
+
+    int id = leerNumero("\nIngrese el ID del libro a eliminar: ");
     for (int i = 0; i < *contador; i++) {
         if (biblioteca[i].id == id) {
             for (int j = i; j < *contador - 1; j++) {
@@ -171,3 +187,4 @@ void eliminarLibro(struct Libro biblioteca[], int *contador) {
     }
     printf("\nLibro no encontrado.\n");
 }
+
