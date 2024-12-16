@@ -1,4 +1,4 @@
-﻿#ifndef FUNCIONES_H
+#ifndef FUNCIONES_H
 #define FUNCIONES_H
 
 #define MAX_LIBROS 20
@@ -12,6 +12,12 @@ struct Libro {
 };
 
 void inicializarBiblioteca(struct Libro biblioteca[], int *contador);
+void convertirMinusculas(char *cadena);
+int validarEstado(char *estado);
+int esTextoValido(const char *cadena);
+void leerCadenaTexto(const char *mensaje, char *cadena, int tamano);
+int leerNumero(const char *mensaje);
+void leerCadena(const char *mensaje, char *cadena, int tamano);
 int agregarLibro(struct Libro biblioteca[], int *contador);
 void mostrarLibros(struct Libro biblioteca[], int contador);
 void buscarLibro(struct Libro biblioteca[], int contador);
